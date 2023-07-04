@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,7 @@ use App\Http\Controllers\AuthController;
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::group(['middleware' => ['auth:sanctum', EnsureFrontendRequestsAreStateful::class]], function(){
+    Route::get('/dashboard/profile', [ProfileController::class, 'index'])->name('dashboard.profile');
+});
