@@ -35,8 +35,9 @@ class AuthController extends BaseController
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            $role = $user->hasRole('admin') ? 'admin' : 'user';
-            return response()->json(['message' => "Login successful - $role"], 200);
+            $is_admin = $user->hasRole('admin');
+            $token = $user->createToken('auth-token')->plainTextToken;
+            return response()->json(['token' => $token, 'user' => $user, 'is_admin' => $is_admin], 200);
 
         }
             return response()->json(['message', 'Invalid credentials'], 401);
